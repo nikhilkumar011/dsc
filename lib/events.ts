@@ -3,6 +3,8 @@ export type Session = {
   img: string; entry: string; text: string; more: string; past: boolean;
 };
 
+export const fest = { name: "samVITya'26", by: "VIT Bhopal", dates: "4 to 6 December 2026" };
+
 export const sessions: Session[] = [
   { slug: "llms-in-production", kind: "Tech talk", title: "LLMs in Production: Architecture & Telemetry", host: "Rohan Varma", role: "Staff Platform Engineer & Open Source Contributor", date: "Wednesday, Dec 02, 2026", time: "5:30 PM to 7:30 PM IST", where: "Seminar Hall 2, virtual stream available", img: "/event-talk.jpg", entry: "Open registration", past: false, text: "A deep technical breakdown of high-throughput model serving, prompt caching strategies, semantic vector routing, and minimizing GPU memory latency.", more: "Explore real production architectural telemetry from systems serving millions of daily inferences. Understand latency bottlenecks, quantized inference, and evaluation guardrails." },
   { slug: "datahacks-26", kind: "Hackathon", title: "DataHacks '26: 36-Hour Hackathon", host: "DSC Executive Board & Industry Judges", role: "Central India flagship collegiate hackathon", date: "Nov 14 to 16, 2026", time: "9:00 AM Friday to 9:00 PM Sunday", where: "Innovation Center & Central Auditorium", img: "/event-hackathon.jpg", entry: "₹2,50,000+ prize pool", past: true, text: "Over 400 collegiate engineers on campus for 36 hours of relentless building across Generative AI, Distributed Data Pipelines, and Civic Intelligence.", more: "DataHacks '26 features direct mentorship from top engineering teams, 1Gbps fiber connectivity, midnight catering, compute credits, and a dedicated hardware lab." },
@@ -21,7 +23,7 @@ export const rounds = [
 ];
 
 export const desk = [
-  { slug: "ai-vs-human", title: "Humans vs AI", tag: "Competition", when: "To be announced", where: "To be announced", fee: "To be announced", open: true },
+  { slug: "ai-vs-human", title: "Humans vs AI", tag: `Part of ${fest.name}`, when: `During ${fest.name}, ${fest.dates}. Day and time to be announced`, where: "VIT Bhopal. Exact venue to be announced", fee: "To be announced", open: true },
   { slug: "llms-in-production", title: "Talks: LLMs in Production", tag: "Tech talk", when: "Dec 02, 2026", where: "Seminar Hall 2, VIT Bhopal", fee: "Free", open: true },
   { slug: "datahacks-26", title: "DataHacks '26", tag: "Hackathon", when: "Nov 14 to 16, 2026", where: "Innovation Center & Central Auditorium", fee: "₹299", open: false },
   { slug: "pytorch-bootcamp", title: "PyTorch Bootcamp", tag: "Bootcamp", when: "Oct 24, 2026", where: "AB-1, VIT Bhopal", fee: "Free", open: false },

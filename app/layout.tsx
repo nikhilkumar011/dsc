@@ -12,7 +12,7 @@ const dots = Doto({ subsets: ["latin"], weight: "900", variable: "--f-dots" });
 
 export const metadata: Metadata = {
   title: { default: "Can humans beat AI? | Data Science Club, VIT Bhopal", template: "%s | Data Science Club, VIT Bhopal" },
-  description: "AI versus Human: a fun, interactive tech competition from the Data Science Club of VIT Bhopal.",
+  description: "AI versus Human: the Data Science Club's interactive tech competition, part of samVITya'26 at VIT Bhopal, 4 to 6 December 2026.",
 };
 
 const theme = `var t;try{t=localStorage.getItem("theme")}catch(e){}document.documentElement.dataset.theme=t||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")`;

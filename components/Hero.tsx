@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { motion, useMotionTemplate, useScroll, useTransform } from "motion/react";
+import { fest } from "@/lib/events";
 import { Portrait } from "./Fields";
 
 export default function Hero() {
@@ -31,7 +32,7 @@ export default function Hero() {
           <motion.span className="h-ai" style={{ opacity: textOut, x: rightX }}>beat AI?</motion.span>
         </h1>
         <motion.div className="hero-foot" style={{ opacity: textOut, visibility: footVisibility }}>
-          <p>The next event from the Data Science Club of VIT Bhopal. A fun, interactive tech competition, and you are the challenger.</p>
+          <p><strong className="fest-name">{fest.name}</strong><span className="fest-date">{fest.dates}</span><span className="fest-line">AI vs Human, the Data Science Club&apos;s interactive tech competition at VIT Bhopal&apos;s {fest.name}.</span></p>
           <a className="btn" href="#rounds">Try the rounds</a>
         </motion.div>
         <div className="versus" aria-hidden="true">

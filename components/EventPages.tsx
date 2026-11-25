@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { motion, useMotionValue, useScroll, useTransform } from "motion/react";
-import { gallery, rounds, sessions } from "@/lib/events";
+import { fest, gallery, rounds, sessions } from "@/lib/events";
 import { EventRow } from "./Club";
 import { Portrait } from "./Fields";
 
@@ -44,13 +44,19 @@ export function VersusPage() {
           </div>
         ))}
       </section>
+      <section className="fest-band">
+        <div className="wrap">
+          <p><span>Part of</span><strong>{fest.name}</strong></p>
+          <p><span>Organized by {fest.by}</span><strong>{fest.dates}</strong></p>
+        </div>
+      </section>
       <section className="wrap vs-rounds">
-        <div className="head"><h2>Can humans beat AI?</h2><p>A fun, interactive tech competition where participants challenge AI through rounds of creativity, logical thinking, observation and problem solving.</p></div>
+        <div className="head"><h2>Can humans beat AI?</h2><p>The Data Science Club&apos;s activity at {fest.name}: a fun, interactive tech competition where participants challenge AI through rounds of creativity, logical thinking, observation and problem solving.</p></div>
         <ul>{rounds.map((r, i) => <RoundRow key={r[0]} r={r} i={i} />)}</ul>
       </section>
       <section className="vs-end"><div className="wrap">
         <h2>Take its place or take its side</h2>
-        <p className="lede">There are more rounds on the day. Date, venue and entry details will be announced soon.</p>
+        <p className="lede">AI vs Human runs as part of {fest.name}, {fest.dates}. The exact day, venue and entry details will be announced soon.</p>
         <div className="btn-row"><Link className="btn" href="/register?event=ai-vs-human">Register</Link><Link className="btn alt" href="/#rounds">Try the rounds</Link></div>
       </div></section>
     </>

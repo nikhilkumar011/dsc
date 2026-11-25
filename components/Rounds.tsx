@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import Link from "next/link";
+import { fest } from "@/lib/events";
 import { DrawDemo, PromptDemo, RapidDemo, SongDemo, SpotDemo } from "./Demos";
 
 function Round({ tone, skill, title, text, children }: { tone: string; skill: string; title: string; text: string; children: React.ReactNode }) {
@@ -58,7 +59,7 @@ export default function Rounds() {
         </div>
         <div className="wrap final-text">
           <h2>{all.length === 0 ? "Who takes it?" : you > ai ? "Humans lead." : you < ai ? "The machine leads." : "Dead even."}</h2>
-          <p className="lede">There are more rounds on the day. Date, venue and registration will be announced soon.</p>
+          <p className="lede">Settle it at {fest.name}, {fest.dates}, VIT Bhopal. There are more rounds at the event.</p>
           <Link className="btn" href="/events/ai-vs-human">See the event</Link>
         </div>
       </div>
