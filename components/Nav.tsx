@@ -1,9 +1,10 @@
 "use client";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useScroll } from "motion/react";
-import { SITE } from "@/lib/data";
 
-const links = [["#about", "About"], ["#domains", "Domains"], ["#events", "Events"], ["#team", "Team"], ["#contact", "Contact"]];
+const links = [["/#about", "About"], ["/events", "Events"], ["/members", "Team"], ["/gallery", "Gallery"], ["/join", "Join us"], ["/register", "Register"]];
 
 function ThemeToggle() {
   const flip = () => {
@@ -31,6 +32,7 @@ function ThemeToggle() {
 export default function Nav() {
   const { scrollYProgress } = useScroll();
   const [open, setOpen] = useState(false);
+  const path = usePathname();
   useEffect(() => {
     if (!open) return;
     const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -48,15 +50,15 @@ export default function Nav() {
         <motion.i style={{ scaleX: scrollYProgress }} />
       </div>
       <header className="nav">
-        <a href="#top" className="brand" onClick={() => setOpen(false)}>
+        <Link href="/" className="brand" onClick={() => setOpen(false)}>
           <img src="/DSClogo.png" alt="" width="38" height="40" className="logo" />
           <span>Data Science Club<small>VIT Bhopal</small></span>
-        </a>
+        </Link>
         <nav className="nav-links" aria-label="Main">
-          {links.map(([h, l]) => <a key={h} href={h}>{l}</a>)}
+          {links.map(([h, l]) => <Link key={h} href={h} aria-current={path.startsWith(h) ? "page" : undefined}>{l}</Link>)}
         </nav>
         <div className="nav-end">
-          <a className="nav-cta" href="#rounds">Humans vs AI</a>
+          <Link className="nav-cta" href="/events/ai-vs-human">Humans vs AI</Link>
           <ThemeToggle />
           <button className="icon-btn menu-btn" aria-expanded={open} aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}>
             <svg width="20" height="20" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d={open ? "M4 4l12 12M16 4L4 16" : "M2 7h16M2 13h16"} /></svg>
@@ -66,7 +68,7 @@ export default function Nav() {
       <AnimatePresence>
         {open && (
           <motion.nav key="menu" className="menu" aria-label="Mobile" initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.2 }}>
-            {[["#rounds", "Humans vs AI"], ...links, [`${SITE}/register`, "Register"], [`${SITE}/join`, "Join us"]].map(([h, l]) => <a key={l} href={h} onClick={() => setOpen(false)}>{l}</a>)}
+            {[["/events/ai-vs-human", "Humans vs AI"], ...links, ["/#contact", "Contact"]].map(([h, l]) => <Link key={l} href={h} onClick={() => setOpen(false)}>{l}</Link>)}
           </motion.nav>
         )}
       </AnimatePresence>

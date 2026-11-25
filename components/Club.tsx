@@ -1,8 +1,11 @@
 "use client";
+import Link from "next/link";
 import { useRef, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform, type MotionValue } from "motion/react";
 import { DomainField } from "./Fields";
-import { EMAIL, SITE, domains, events, inquiries, panel, schedule, socials, venue } from "@/lib/data";
+import { EMAIL, domains, inquiries, schedule, socials, venue } from "@/lib/data";
+import { sessions, type Session } from "@/lib/events";
+import { teams } from "@/lib/members";
 
 function Word({ p, i, n, children }: { p: MotionValue<number>; i: number; n: number; children: string }) {
   const opacity = useTransform(p, [i / n, (i + 1) / n], [0.14, 1]);
@@ -61,7 +64,7 @@ export function Domains() {
                 <h3>{d.sub}</h3>
                 <p>{d.text}</p>
                 <p className="tools">{d.tools.join(", ")}</p>
-                <a className="link" href={`${SITE}/join`}>Apply to {d.name}</a>
+                <Link className="link" href="/join">Apply to {d.name}</Link>
               </motion.div>
             </AnimatePresence>
           </div>
@@ -72,7 +75,7 @@ export function Domains() {
   );
 }
 
-function EventRow({ e }: { e: (typeof events)[number] }) {
+export function EventRow({ e }: { e: Session }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
@@ -83,11 +86,11 @@ function EventRow({ e }: { e: (typeof events)[number] }) {
         <motion.img src={e.img} alt="" width="1024" height="768" loading="lazy" style={{ y, scale: 1.18 }} />
       </motion.div>
       <div className="event-text">
-        <p className="meta">{e.kind}, {e.note.toLowerCase()}</p>
+        <p className="meta">{e.kind}</p>
         <h3>{e.title}</h3>
         <p>{e.text}</p>
-        <p className="meta">{e.host}<br />{e.when}, {e.where}</p>
-        <a className="link" href={`${SITE}/events`}>View session details</a>
+        <p className="meta">{e.host}<br />{e.date}, {e.where}</p>
+        <Link className="link" href={`/events/${e.slug}`}>View session details</Link>
       </div>
     </article>
   );
@@ -96,17 +99,25 @@ function EventRow({ e }: { e: (typeof events)[number] }) {
 export function Events() {
   return (
     <section id="events" className="wrap events">
-      <div className="head"><h2>This week at DSC</h2><p>Flagship bootcamps, 36-hour hackathons, and technical deep-dives with open reservations.</p></div>
-      {events.map((e) => <EventRow key={e.title} e={e} />)}
-      <div className="head sched-head"><h2>Upcoming tracks & sprints</h2><a className="link" href={`${SITE}/events`}>Full calendar</a></div>
+      <div className="head"><h2>Sessions at DSC</h2><p>Flagship bootcamps, 36-hour hackathons, and technical deep-dives.</p></div>
+      {sessions.slice(0, 3).map((e) => <EventRow key={e.title} e={e} />)}
+      <Schedule />
+    </section>
+  );
+}
+
+export function Schedule({ link = true }: { link?: boolean }) {
+  return (
+    <>
+      <div className="head sched-head"><h2>Tracks & sprints</h2>{link && <Link className="link" href="/events">All events</Link>}</div>
       <ul className="sched">
         {schedule.map(([date, title, who, kind], i) => (
           <motion.li key={title} initial={{ opacity: 0, x: i % 2 ? 60 : -60 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-8% 0px" }} transition={{ type: "spring", visualDuration: 0.5, bounce: 0.1 }}>
-            <a href={`${SITE}/events`}><time>{date}</time><strong>{title}</strong><span>{who}</span><span>{kind}</span></a>
+            <div className="sched-row"><time>{date}</time><strong>{title}</strong><span>{who}</span><span>{kind}</span></div>
           </motion.li>
         ))}
       </ul>
-    </section>
+    </>
   );
 }
 
@@ -143,13 +154,13 @@ export function Team() {
     <section ref={ref} id="team" className="team">
       <motion.div className="team-l" style={{ x: a }}>
         <h2>Meet the team</h2>
-        <ul>{panel.map(([n, r]) => <li key={n}><strong>{n}</strong><span>{r}</span></li>)}</ul>
-        <a className="btn" href={`${SITE}/members`}>See all members</a>
+        <ul>{teams[0].people.map(([n, r]) => <li key={n}><strong>{n}</strong><span>{r}</span></li>)}</ul>
+        <Link className="btn" href="/members">See all members</Link>
       </motion.div>
       <motion.div className="team-r" style={{ x: b }}>
         <h2>Join the core team</h2>
         <p className="lede">Ready to shape AI/ML culture at VIT Bhopal? Submit your application for interview rounds across technical development, research, design, and operations.</p>
-        <a className="btn" href={`${SITE}/join`}>Apply now</a>
+        <Link className="btn" href="/join">Apply now</Link>
       </motion.div>
     </section>
   );
@@ -161,7 +172,7 @@ export function Contact() {
   return (
     <section id="contact" className="wrap contact">
       <div className="head"><h2>Contact us</h2><p>We collaborate with collegiate builders, guest researchers, industry speakers, and community sponsors.</p></div>
-      <form onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
+      <form className="form" onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
         <fieldset>
           <legend>What is it about?</legend>
           <div className="options">{inquiries.map((q, k) => <button type="button" key={q} className={`chip ${k === kind ? "is-on" : ""}`} aria-pressed={k === kind} onClick={() => setKind(k)}>{q}</button>)}</div>
@@ -178,8 +189,8 @@ export function Contact() {
   );
 }
 
-const here = [["#about", "About"], ["#domains", "Domains"], ["#events", "Events"], ["#visit", "Campus logistics"], ["#contact", "Contact"]];
-const pages = [["register", "Register"], ["join", "Join us"], ["members", "Team"], ["events", "Full calendar"], ["gallery", "Media archive"]];
+const here = [["/#about", "About"], ["/#domains", "Domains"], ["/#visit", "Campus logistics"], ["/#contact", "Contact"]];
+const pages = [["/events", "Events"], ["/register", "Register"], ["/members", "Team"], ["/join", "Join us"], ["/gallery", "Gallery"]];
 
 export function Footer() {
   return (
@@ -190,8 +201,8 @@ export function Footer() {
           <p>Official Data Science Club of VIT Bhopal University.</p>
           <p><a href={`mailto:${EMAIL}`}>{EMAIL}</a><br />Bhopal-Indore Highway, Kothri Kalan, Sehore, MP 466114</p>
         </div>
-        <nav aria-label="Footer">{here.map(([h, l]) => <a key={l} href={h}>{l}</a>)}</nav>
-        <nav aria-label="Club pages">{pages.map(([h, l]) => <a key={l} href={`${SITE}/${h}`}>{l}</a>)}</nav>
+        <nav aria-label="Footer">{here.map(([h, l]) => <Link key={l} href={h}>{l}</Link>)}</nav>
+        <nav aria-label="Club pages">{pages.map(([h, l]) => <Link key={l} href={h}>{l}</Link>)}</nav>
         <nav aria-label="Social">{socials.map(([l, h]) => <a key={l} href={h}>{l}</a>)}</nav>
       </div>
       <p className="wrap fine">© 2026 Data Science Club VIT Bhopal. All rights reserved.</p>

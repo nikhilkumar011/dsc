@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Anybody, Caveat_Brush, Doto, Instrument_Sans } from "next/font/google";
+import Motion from "@/components/Motion";
+import Nav from "@/components/Nav";
+import { Footer } from "@/components/Club";
 import "./globals.css";
 
 const display = Anybody({ subsets: ["latin"], axes: ["wdth"], variable: "--f-display" });
@@ -8,7 +11,7 @@ const hand = Caveat_Brush({ subsets: ["latin"], weight: "400", variable: "--f-ha
 const dots = Doto({ subsets: ["latin"], weight: "900", variable: "--f-dots" });
 
 export const metadata: Metadata = {
-  title: "Can humans beat AI? | Data Science Club, VIT Bhopal",
+  title: { default: "Can humans beat AI? | Data Science Club, VIT Bhopal", template: "%s | Data Science Club, VIT Bhopal" },
   description: "AI versus Human: a fun, interactive tech competition from the Data Science Club of VIT Bhopal.",
 };
 
@@ -16,10 +19,15 @@ const theme = `var t;try{t=localStorage.getItem("theme")}catch(e){}document.docu
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${display.variable} ${body.variable} ${hand.variable} ${dots.variable}`}>
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning className={`${display.variable} ${body.variable} ${hand.variable} ${dots.variable}`}>
       <body>
         <script dangerouslySetInnerHTML={{ __html: theme }} />
-        {children}
+        <Motion>
+          <a className="skip" href="#main">Skip to content</a>
+          <Nav />
+          <main id="main">{children}</main>
+          <Footer />
+        </Motion>
       </body>
     </html>
   );

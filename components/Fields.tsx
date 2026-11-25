@@ -6,12 +6,12 @@ import { domainShapes, portrait } from "@/lib/portrait";
 type Colors = { human: string; ai: string; dark: boolean };
 type Draw = (ctx: CanvasRenderingContext2D, w: number, h: number, t: number, c: Colors, still: boolean) => void;
 
-const readColors = (): Colors => {
+export const readColors = (): Colors => {
   const c = getComputedStyle(document.documentElement);
   return { human: c.getPropertyValue("--human").trim(), ai: c.getPropertyValue("--ai-mark").trim(), dark: document.documentElement.dataset.theme === "dark" };
 };
 
-function useCanvas(ref: React.RefObject<HTMLCanvasElement | null>, setup: () => Draw) {
+export function useCanvas(ref: React.RefObject<HTMLCanvasElement | null>, setup: () => Draw) {
   useEffect(() => {
     const el = ref.current!;
     const ctx = el.getContext("2d")!;
@@ -75,7 +75,8 @@ export function Portrait({ split, leftEdge, rightEdge }: Record<"split" | "leftE
       p.sx += (p.x - p.sx) * 0.07;
       p.sy += (p.y - p.sy) * 0.07;
       const mx = still ? 0 : p.sx, my = still ? 0 : p.sy;
-      const q = still ? 0 : split.get();
+      const fixed = split.get() === 1 && leftEdge.get() === 50 && rightEdge.get() === 50;
+      const q = still && !fixed ? 0 : split.get();
       const small = w < 760;
       const s = small ? Math.min(h * 0.235, w * 0.5) : Math.min(h * 0.43, w * 0.31);
       const cx = w / 2, cy = small ? h * 0.33 : h * (0.49 - q * 0.03);
@@ -93,7 +94,7 @@ export function Portrait({ split, leftEdge, rightEdge }: Record<"split" | "leftE
           const l = Math.min(1, Math.max(0, (m.lit - 0.3) / 0.66));
           const dim = 1 - crop * Math.min(1, Math.max(0, (-0.5 - m.y) / 0.3));
           const fx = cx + dx + m.x * s;
-          const flooded = !still && (side ? fx > edge : fx < edge);
+          const flooded = (!still || fixed) && (side ? fx > edge : fx < edge);
           const bright = flooded ? side : c.dark ? 1 : 0;
           const tone = (bright * Math.pow(l, 1.4) + (1 - bright) * (0.1 + Math.pow(1 - l, 0.85) * 0.9)) * m.fade * k * dim;
           if (tone < (side ? 0.06 : 0.12 + m.delay * 0.9)) continue;
@@ -119,7 +120,7 @@ export function Portrait({ split, leftEdge, rightEdge }: Record<"split" | "leftE
           ctx.strokeStyle = c.human;
           ctx.stroke(path);
         }
-        if (still) continue;
+        if (still && !fixed) continue;
         if (side ? edge >= w : edge <= 0) continue;
         ctx.save();
         ctx.beginPath();

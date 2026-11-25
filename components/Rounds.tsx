@@ -1,7 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import { INSTAGRAM } from "@/lib/data";
+import Link from "next/link";
 import { DrawDemo, PromptDemo, RapidDemo, SongDemo, SpotDemo } from "./Demos";
 
 function Round({ tone, skill, title, text, children }: { tone: string; skill: string; title: string; text: string; children: React.ReactNode }) {
@@ -59,7 +59,7 @@ export default function Rounds() {
         <div className="wrap final-text">
           <h2>{all.length === 0 ? "Who takes it?" : you > ai ? "Humans lead." : you < ai ? "The machine leads." : "Dead even."}</h2>
           <p className="lede">There are more rounds on the day. Date, venue and registration will be announced soon.</p>
-          <a className="btn" href={INSTAGRAM}>Follow for registration</a>
+          <Link className="btn" href="/events/ai-vs-human">See the event</Link>
         </div>
       </div>
     </section>
